@@ -18,12 +18,12 @@ class User(Base):
             'user_email' : self.user_email,
             'id'         : self.id,
         }
-        
+
 class Category(Base):
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True)
-    category_name = Column(String(25), nullable=False)
+    category_name = Column(String(50), nullable=False)
 
     @property
     def serialize(self):
@@ -36,10 +36,11 @@ class Items(Base):
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True)
-    item_name = Column(String(25), nullable=False)
-    category = Column(String(25), nullable=False)
-    description = Column(String(250), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    item_name = Column(String(50), nullable=False)
+    category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship(Category)
+    description = Column(String(500), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship(User)
 
     @property
@@ -52,7 +53,7 @@ class Items(Base):
             'id'          : self.id,
         }
 
-engine = create_engine('sqlite:///categories.db', connect_args={'check_same_thread': False})
+engine = create_engine('sqlite:///category_app.db', connect_args={'check_same_thread': False})
 
 Base.metadata.create_all(engine)
 
