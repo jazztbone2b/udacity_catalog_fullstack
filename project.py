@@ -41,7 +41,8 @@ def catalogItems(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
-    output = ''
+    return render_template('items.html', category=category, items=items)
+    '''output = ''
     for i in items:
         output += i.item_name
         output += '<br>'
@@ -49,7 +50,7 @@ def catalogItems(category_id):
         output += '<br>'
         output += str(i.id)
         output += '<br>'
-    return output
+    return output'''
 
 #Create
 @app.route('/catalog/item/new')

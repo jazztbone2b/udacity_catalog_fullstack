@@ -1,0 +1,23 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div>
+        {% for i in items %}
+        <h1>{{ category.category_name }} Items</h1>
+        <h2>{{ i.item_name }}</h2>
+        <p>{{ i.description }}</p>
+        <a href=''><p id='edit'>Edit Item</p></a>
+        <a href=''><p id='delete'>Delete Item</p></a>
+        {% endfor %}
+    </div>
+    
+    <div>
+    </div>
+
+</body>
+</html>
