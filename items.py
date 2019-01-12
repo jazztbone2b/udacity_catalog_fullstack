@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from db_setup import Base, User, Category, Items
 
 engine = create_engine('sqlite:///category_app.db')
-
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
