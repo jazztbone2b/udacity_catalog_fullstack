@@ -53,7 +53,7 @@ class Items(Base):
             'id'          : self.id,
         }
 
-engine = create_engine('sqlite:///category_app.db', connect_args={'check_same_thread': False})
+engine = create_engine('sqlite:///catalog.db', connect_args={'check_same_thread': False})
 
 Base.metadata.create_all(engine)
 

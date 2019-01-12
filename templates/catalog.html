@@ -1,0 +1,21 @@
+<html>
+<header>
+</header>
+
+<body>
+    <div>
+        <h1>Categories:</h1>
+        {% for i in category %}
+        <a href='/catalog/{{i.id}}'><h2>{{ i.category_name }}</h2></a>
+        {% endfor %}
+    </div>
+    
+    <div>
+        <h1>Latest Items:</h1>
+        {% for i in items %}
+        <h2>{{ i.item_name }}</h2>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
