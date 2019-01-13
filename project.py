@@ -36,41 +36,36 @@ def Catalog():
     items = session.query(Items).filter_by(category_id=Items.category_id)
     return render_template('catalog.html', category=category, items=items)
 
-@app.route('/catalog/<int:category_id>')
+@app.route('/catalog/<category_id>')
 def catalogItems(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
     return render_template('items.html', category=category, items=items)
-    '''output = ''
-    for i in items:
-        output += i.item_name
-        output += '<br>'
-        output += i.description
-        output += '<br>'
-        output += str(i.id)
-        output += '<br>'
-    return output'''
 
 #Create
-@app.route('/catalog/item/new')
-def newItem():
-    return "After logging in, users can add new items"
+@app.route('/catalog/<int:category_id>/new/')
+def newItem(category_id):
+    session = DBSession()
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Items).filter_by(category_id=category.id)
+    return render_template('newItem.html', category=category, items=items)
 
 #Edit
-@app.route('/catalog/item/edit')
-def editCatalogItem():
-    return "User can edit catalog items here"
-
-#Update
-@app.route('/catalog/item/update')
-def updateCatalogeItem():
-    return "User can update catalog item here"
+@app.route('/catalog/<int:category_id>/edit/')
+def editCatalogItem(category_id):
+    session = DBSession()
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Items).filter_by(category_id=category.id)
+    return render_template('editItem.html', category=category, items=items)
 
 #Delete
-@app.route('/catalog/item/delete')
-def deleteCatalogItem():
-    return "User can delete catalog item here"
+@app.route('/catalog/<int:category_id>/delete/')
+def deleteCatalogItem(category_id):
+    session = DBSession()
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Items).filter_by(category_id=category.id)
+    return render_template('deleteItem.html', category=category, items=items)
 
 
 if __name__ == '__main__':
