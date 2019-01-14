@@ -6,19 +6,51 @@
 </head>
 
 <body>
-    <div>
-        {% for i in items %}
+    <div id='message-container'>
         <h1>{{ category.category_name }} Items</h1>
-        <h2>{{ i.item_name }}</h2>
-        <p>{{ i.description }}</p>
+
         <a href="{{url_for('newItem', category_id = category.id)}}"><p id='create'>Create New Item</p></a>
-        <a href="{{url_for('editCatalogItem', category_id = category.id)}}"><p id='edit'>Edit Item</p></a>
-        <a href="{{url_for('deleteCatalogItem', category_id = category.id)}}"><p id='delete'>Delete Item</p></a>
-        {% endfor %}
+
+        <div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <p id='flash-message'>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
     </div>
-    
-    <div>
+
+    <div id='item-container'>
+
+        {% for i in items %}
+        <div id='item-box'>
+            <h2>{{ i.item_name }}</h2>
+            <p>{{ i.description }}</p>
+            <div>
+                <a href="{{url_for('editCatalogItem', category_id = category.id)}}" id='edit'> Edit Item</a>
+                <a href="{{url_for('deleteCatalogItem', category_id = category.id, item_id = i.id)}}" id='delete'>Delete Item</a>
+            </div>
+        </div>
+        {% endfor %}
+
     </div>
 
 </body>
+
+<script>
+
+let flashedMessage = document.querySelector('#flash-message');
+
+const deleteText = () => {
+    flashedMessage.innerHTML = '';
+}
+
+if (flashedMessage) {
+    setTimeout(deleteText, 2000)
+}
+
+
+</script>
 </html>

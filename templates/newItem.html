@@ -5,22 +5,21 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
-<body>
+<body id='container'>
     <div>
         <h2>Create a new {{ category.category_name }} Item</h2>
         
-        <form>
-            <h3>Title</h3>
-            <input type='text' placeholder='name of item' style='height:22px'>
+        <form action="#" method="POST">
+            <label for="name">Title</label>
             <br>
-            <h3>Description</h3>
-            <textarea type='text' maxlength='500' style='width:300px; height:100px'></textarea>
+            <input type='text' placeholder='name of item' style='height:22px' maxlength='50' name='name'>
+            <br>
+            <label for='description'>Description</label>
+            <br>
+            <textarea type='text' maxlength='500' style='width:300px; height:100px' name='description'></textarea>
             <br> <br>
-            <input type='submit'></input>
+            <input type='submit'>Create Item</input>
         </form>
-    </div>
-    
-    <div>
     </div>
 
 </body>

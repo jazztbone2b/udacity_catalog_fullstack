@@ -19,7 +19,7 @@
             {% for i in items %}
             <h2>{{ i.item_name }} 
                 {% for j in category %}
-                    {% if i.id == j.id %}
+                    {% if i.category_id == j.id %}
                         ({{ j.category_name }})
                     {% endif %}
                 {% endfor %}
