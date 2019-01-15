@@ -7,8 +7,23 @@
 
 <body id='container'>
     <div>
-        <h1>Edit {{ category.category_name }} Item</h1>
+        <h1>Edit {{ item.item_name }}</h1>
         
+        <form action="#" method="POST">
+            <label for="title">Title</label>
+            <br>
+            <input type='text' value='{{ item.item_name }}' style='height:22px' maxlength='50' name='name'>
+            <br>
+            <label for='description'>Description</label>
+            <br>
+            <textarea type='text' maxlength='500' style='width:300px; height:100px' name='description'>{{ item.description }}</textarea>
+            <br> <br>
+            <input type='submit' value='Edit Item'></input>
+        </form>
+
+        <a href="{{url_for('catalogItems', category_id = item.category_id)}}">
+            <button>Cancel</button>
+        </a>
     </div>
     
     <div>

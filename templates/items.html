@@ -29,7 +29,7 @@
             <h2>{{ i.item_name }}</h2>
             <p>{{ i.description }}</p>
             <div>
-                <a href="{{url_for('editCatalogItem', category_id = category.id)}}" id='edit'> Edit Item</a>
+                <a href="{{url_for('editCatalogItem', category_id = category.id, item_id = i.id)}}" id='edit'> Edit Item</a>
                 <a href="{{url_for('deleteCatalogItem', category_id = category.id, item_id = i.id)}}" id='delete'>Delete Item</a>
             </div>
         </div>

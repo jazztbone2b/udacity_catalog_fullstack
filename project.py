@@ -65,15 +65,27 @@ def newItem(category_id):
         return render_template('newItem.html', category=category, items=items)
 
 #Edit
-@app.route('/catalog/<int:category_id>/edit/')
-def editCatalogItem(category_id):
+@app.route('/catalog/<int:category_id>/<int:item_id>/edit/', 
+    methods=['GET', 'POST'])
+def editCatalogItem(category_id, item_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
-    return render_template('editItem.html', category=category, items=items)
+    itemToEdit = session.query(Items).filter_by(id=item_id).one()
+
+    if request.method == 'POST':
+        itemToEdit.item_name = request.form['name']
+        itemToEdit.description = request.form['description']
+        session.add(itemToEdit)
+        session.commit()
+        flash('Item edited successfully!')
+        return redirect(url_for('catalogItems', category_id=category_id))
+    else:
+        return render_template('editItem.html', category=category, items=items, item=itemToEdit)
 
 #Delete
-@app.route('/catalog/<int:category_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
+@app.route('/catalog/<int:category_id>/<int:item_id>/delete/', 
+    methods=['GET', 'POST'])
 def deleteCatalogItem(category_id, item_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
