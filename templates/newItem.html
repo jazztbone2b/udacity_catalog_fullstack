@@ -1,19 +1,19 @@
 <html>
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
-<body id='container'>
-    <div>
-        <h2>Create a new {{ category.category_name }} Item</h2>
-        
+<body>
+    {% include "header.html" %}
+    <div id='container'>
         <form action="#" method="POST">
+            <h2>Create a new {{ category.category_name }} Item</h2>
             <label for="name">Title</label>
             <br>
             <input type='text' placeholder='name of item' style='height:22px' maxlength='50' name='name'>
-            <br>
+            <br><br>
             <label for='description'>Description</label>
             <br>
             <textarea type='text' maxlength='500' style='width:300px; height:100px' name='description'></textarea>

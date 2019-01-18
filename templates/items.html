@@ -6,10 +6,11 @@
 </head>
 
 <body>
+    {% include "header.html" %}
     <div id='message-container'>
         <h1>{{ category.category_name }} Items</h1>
 
-        <a href="{{url_for('newItem', category_id = category.id)}}"><p id='create'>Create New Item</p></a>
+        <p id='create'><a href="{{url_for('newItem', category_id = category.id)}}">Create New Item</a></p>
 
         <div>
             {% with messages = get_flashed_messages() %}
@@ -30,6 +31,7 @@
             <p>{{ i.description }}</p>
             <div>
                 <a href="{{url_for('editCatalogItem', category_id = category.id, item_id = i.id)}}" id='edit'> Edit Item</a>
+                <a>|</a>
                 <a href="{{url_for('deleteCatalogItem', category_id = category.id, item_id = i.id)}}" id='delete'>Delete Item</a>
             </div>
         </div>

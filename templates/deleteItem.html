@@ -1,25 +1,24 @@
 <html>
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
-    <div>
-        <h1>Are you sure you want to delete {{ item.item_name }}?</h1>
+    {% include "header.html" %}
+    <div id='container'>
+        <div id='delete-container'>
+            <h1>Are you sure you want to delete {{ item.item_name }}?</h1>
 
-        <form action='#' method='POST'>
-            <input type='submit' value='Delete Item'></input>
-        </form>
-        
-        <a href="{{url_for('catalogItems', category_id = item.category_id)}}">
-            <button>Cancel</button>
-        </a>
+            <form action='#' method='POST'>
+                <input type='submit' value='Delete Item'></input>
+            </form>
+            
+            <a href="{{url_for('catalogItems', category_id = item.category_id)}}">
+                <button id='button'>Cancel</button>
+            </a>
+        </div>
     </div>
-    
-    <div>
-    </div>
-
 </body>
 </html>

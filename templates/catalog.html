@@ -1,16 +1,17 @@
 <html>
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
+    {% include "header.html" %}
     <div id='container'>
         <div id='box'>
             <h1>Categories:</h1>
             {% for i in category %}
-            <a href="{{url_for('catalogItems', category_id = i.id)}}"><h2>{{ i.category_name }}</h2></a>
+            <h2><a href="{{url_for('catalogItems', category_id = i.id)}}">{{ i.category_name }}</a></h2>
             {% endfor %}
         </div>
         

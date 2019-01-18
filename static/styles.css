@@ -1,26 +1,76 @@
 body {
     font-family: 'Roboto', sans-serif;
+    margin-top: 0;
+    margin-left: 0;
+    padding: 0;
+    font-size: 14px;
 }
 
 a {
     text-decoration: none;
-    color: black;
+    color: inherit;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    top: 0;
+    left: 0;
+    margin-bottom: 10px;
+    padding: 15 5 15 5;
+    background-color: #512da8;
+    color: white;
+    max-height: 200px;
+    width: 100%;
 }
 
 #container {
-    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
+#delete-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#button {
+    border: 1px solid black;
+}
+#button:hover, input:hover {
+    cursor: pointer;
+}
+
+#login-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+#login-button{
+    padding: 0 20 0 20;
+    margin-right: 5px;
+    align-content: center;
+    background-color: #fbc02d;
+    color: white;
+}
+
 #box {
-    width: 600;
+    width: 500;
     padding: 10px 10px;
     border: 1px solid black;
 }
 
-#edit:hover{
+@media screen and (max-width: 600px) {
+    #box {
+        max-width: 320px;
+    }
+}
+
+#edit:hover {
     color: orange;
 }
 #create:hover {
@@ -45,5 +95,4 @@ a {
     display: flex;
     flex-direction: column;
     text-align: center;
-    width: 100%;
 }
