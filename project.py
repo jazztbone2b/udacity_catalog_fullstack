@@ -3,6 +3,7 @@ from flask import session as login_session
 from flask import make_response
 
 from flask_dance.contrib.google import make_google_blueprint, google
+from flask_login import logout_user
 
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -32,7 +33,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 
 #Google Login using Flask Dance #####
-
 google_blueprint = make_google_blueprint(
     client_id = '1059882579334-9pou6o75d96ls5agole7l6apm6vp6p8k.apps.googleusercontent.com',
     client_secret = 'uZ0J_cLBjEWnX8EXbzn7ZWv9'
@@ -50,7 +50,19 @@ def googleLogin():
         account_info_json = account_info.json()
         return "You are {} on Google".format(account_info_json['name'])
 
-
+#Log the user out
+@app.route("/logout")
+def logout():
+    token = google_blueprint.token["access_token"]
+    resp = google.post(
+        "https://accounts.google.com/o/oauth2/revoke",
+        params={"token": token},
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    if google.authorized:
+        if resp.ok:
+            login_session.clear()
+            return redirect(url_for('loggedOut'))
 
 
 
@@ -91,7 +103,19 @@ def Catalog():
     session = DBSession()
     category = session.query(Category).all()
     items = session.query(Items).filter_by(category_id=Items.category_id)
+
+    #USE THIS FOR EACH USER'S HOMEPAGE
+    '''if google.authorized:
+        account_info = google.get("/oauth2/v2/userinfo")
+        if account_info.ok:
+            account_info_json = account_info.json()
+            name = account_info_json['name']'''
+
     return render_template('catalog.html', category=category, items=items)
+
+@app.route('/logged_out')
+def loggedOut():
+    return render_template('loggedOut.html')
 
 @app.route('/catalog/<category_id>')
 def catalogItems(category_id):
@@ -157,6 +181,7 @@ def deleteCatalogItem(category_id, item_id):
     else:
         return render_template('deleteItem.html', category=category, items=items, item=itemToDelete)
 
+#login_manager = LoginManager()
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

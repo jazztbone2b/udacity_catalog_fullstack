@@ -1,0 +1,35 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <center><p>You have been logged out.</p></center>
+    <center><p id='redirect'></p></center>
+</body>
+
+</html>
+
+<script>
+
+const redirectText = document.querySelector('#redirect');
+let countdown = 2;
+redirectText.innerHTML = 'Redirecting in ' + countdown;
+
+const timer = setInterval(() => {
+    document.querySelector('#redirect').innerHTML = 'Redirecting in ' + --countdown;
+    if (countdown <= 0) {
+        clearInterval(timer);
+    }
+}, 1000)
+
+
+const redirectHomePage = () => {
+    window.location.replace('http://localhost:5000/')
+}
+
+setTimeout(redirectHomePage, 2000)
+
+</script>
