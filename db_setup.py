@@ -1,22 +1,23 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+import datetime
 
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    user_name = Column(String(50), nullable=False)
-    user_email = Column(String(100), nullable=False)
+    name = Column(String(50), nullable=False)
+    email = Column(String(100), nullable=False)
 
     @property
     def serialize(self):
         return {
-            'user_name'  : self.user_name,
-            'user_email' : self.user_email,
-            'id'         : self.id,
+            'name': self.name,
+            'email': self.email,
+            'id': self.id,
         }
 
 class Category(Base):
@@ -28,8 +29,8 @@ class Category(Base):
     @property
     def serialize(self):
         return {
-            'category_name' : self.category_name,
-            'id'            : self.id,
+            'category_name': self.category_name,
+            'id': self.id,
         }
 
 class Items(Base):
@@ -37,20 +38,22 @@ class Items(Base):
 
     id = Column(Integer, primary_key=True)
     item_name = Column(String(50), nullable=False)
+    date_created = Column(DateTime, default=datetime.datetime.utcnow)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
     description = Column(String(500), nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship(User)
 
     @property
     def serialize(self):
         return {
-            'item_name'   : self.item_name,
-            'category'    : self.category,
-            'description' : self.description,
-            'user_id'     : self.user_id,
-            'id'          : self.id,
+            'item_name': self.item_name,
+            'date_created': self.date_created,
+            'category': self.category,
+            'description': self.description,
+            'user_id': self.user_id,
+            'id': self.id,
         }
 
 engine = create_engine('sqlite:///catalog.db', connect_args={'check_same_thread': False})

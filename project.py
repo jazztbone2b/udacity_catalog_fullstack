@@ -52,7 +52,15 @@ def googleLogin():
 
     if account_info.ok:
         account_info_json = account_info.json()
-        return "You are {} on Google".format(account_info_json['name'])
+
+        '''login_session['email'] = account_info_json['email']
+        login_session['name'] = account_info_json['name']
+
+        user_id = getUserID(login_session['email'])
+        if not user_id:
+            user_id = createUser(login_session)
+        login_session['user_id'] = user_id'''
+        return "You are {} on Google".format(account_info_json['email'])
 
 #Log the user out
 @app.route("/logout")
@@ -68,7 +76,32 @@ def logout():
             login_session.clear()
             return redirect(url_for('loggedOut'))
 
-#Save logged in user to the database, first check if they exist
+#Save logged in user to the database
+def createUser(login_session):
+    session = DBSession()
+    newUser = User(
+        name=login_session['name'], 
+        email=login_session['email']
+        )
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+def getUserInfo(user_id):
+    session = DBSession()
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+def getUserID(email):
+    session = DBSession()
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
 
 #JSON ENDPOINTS Work in Progress ######
 
@@ -115,9 +148,21 @@ def Catalog():
         if account_info.ok:
             account_info_json = account_info.json()
 
-            name = account_info_json['name']
-            email = account_info_json['email']
-            return render_template('loggedIn.html', name=name, email=email, category=category, items=items)
+            login_session['name'] = account_info_json['name']
+            login_session['email'] = account_info_json['email']
+
+            #Check to see if user exists in the Data Base
+            user_id = getUserID(login_session['email'])
+            if not user_id:
+                user_id = createUser(login_session)
+            login_session['user_id'] = user_id
+
+        return render_template(
+            'loggedIn.html',
+            user_name=login_session['name'],
+            email=login_session['email'],
+            user_id=user_id,
+            category=category, items=items)
     else:
         return render_template('catalog.html', category=category, items=items)
 
