@@ -50,9 +50,7 @@ class Items(Base):
         return {
             'item_name': self.item_name,
             'date_created': self.date_created,
-            'category': self.category,
             'description': self.description,
-            'user_id': self.user_id,
             'id': self.id,
         }
 

@@ -121,15 +121,13 @@ def usersJSON():
 def allItemsJSON():
     session = DBSession()
     items = session.query(Items).all()
-    return eval(str(items))
-    #return jsonify(items=[r.serialize for r in items])
+    return jsonify(items=[r.serialize for r in items])
 
 @app.route('/catalog/<category_id>/JSON')
 def itemsJSON(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
-    #return str(items)
     return jsonify(tems=[r.serialize for r in items])
 
 ######################
