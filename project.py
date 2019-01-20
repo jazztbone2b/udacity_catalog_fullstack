@@ -35,7 +35,11 @@ DBSession = sessionmaker(bind=engine)
 #Google Login using Flask Dance #####
 google_blueprint = make_google_blueprint(
     client_id = '1059882579334-9pou6o75d96ls5agole7l6apm6vp6p8k.apps.googleusercontent.com',
-    client_secret = 'uZ0J_cLBjEWnX8EXbzn7ZWv9'
+    client_secret = 'uZ0J_cLBjEWnX8EXbzn7ZWv9',
+    scope=[
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/plus.me",
+    ]
 )
 
 app.register_blueprint(google_blueprint, url_prefix='/google_login')
@@ -64,7 +68,7 @@ def logout():
             login_session.clear()
             return redirect(url_for('loggedOut'))
 
-
+#Save logged in user to the database, first check if they exist
 
 #JSON ENDPOINTS Work in Progress ######
 
@@ -105,13 +109,17 @@ def Catalog():
     items = session.query(Items).filter_by(category_id=Items.category_id)
 
     #USE THIS FOR EACH USER'S HOMEPAGE
-    '''if google.authorized:
+    if google.authorized:
         account_info = google.get("/oauth2/v2/userinfo")
+
         if account_info.ok:
             account_info_json = account_info.json()
-            name = account_info_json['name']'''
 
-    return render_template('catalog.html', category=category, items=items)
+            name = account_info_json['name']
+            email = account_info_json['email']
+            return render_template('loggedIn.html', name=name, email=email, category=category, items=items)
+    else:
+        return render_template('catalog.html', category=category, items=items)
 
 @app.route('/logged_out')
 def loggedOut():

@@ -46,25 +46,12 @@ a {
 }
 
 
-#logout-container {
+#logout-container, #logout-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
-
-#login-button {
-    padding: 0 20 0 20;
-    margin-right: 5px;
-    align-content: center;
-    background-color: #fbc02d;
-    color: white;
-    cursor: pointer;
-}
-
-#logout-container {
-    display: none;
-}
-#logout-button {
+#login-button, #logout-button {
     padding: 0 20 0 20;
     margin-right: 5px;
     align-content: center;
