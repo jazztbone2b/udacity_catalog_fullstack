@@ -7,7 +7,7 @@
 
 <body>
     {% include "loggedInHeader.html" %}
-    <center><h1>Welcome {{ user_name }} {{ email }} {{ user_id }}</h1></center>
+    <center><h1>Welcome {{ email }}</h1></center>
     <div id='container'>
         <div id='box'>
             <h1>Categories:</h1>
@@ -18,15 +18,19 @@
         
         <div id='box'>
             <h1>Latest Items:</h1>
-            {% for i in items %}
-            <h2>{{ i.item_name }} 
-                {% for j in category %}
-                    {% if i.category_id == j.id %}
-                        ({{ j.category_name }})
+            {% if items %}
+                {% for i in items %}
+                    {% if user_id == i.user_id %}
+                        <h2>{{ i.item_name }} 
+                            {% for j in category %}
+                                {% if i.category_id == j.id %}
+                                    ({{ j.category_name }})
+                                {% endif %}
+                            {% endfor %}
+                        </h2>
                     {% endif %}
                 {% endfor %}
-            </h2>
-            {% endfor %}
+            {% endif %}
         </div>
     </div>
 

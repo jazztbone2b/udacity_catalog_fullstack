@@ -9,6 +9,11 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+#Test User
+test_user = User(name='Test User', email='tes@email.com')
+session.add(test_user)
+session.commit()
+
 #categories to add to the database
 category1 = Category(category_name='Soccer')
 session.add(category1)

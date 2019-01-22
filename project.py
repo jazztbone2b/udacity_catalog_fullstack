@@ -5,7 +5,7 @@ from flask import make_response
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_login import logout_user
 
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine, asc, desc
 from sqlalchemy.orm import sessionmaker
 
 from db_setup import Base, User, Category, Items
@@ -38,7 +38,7 @@ google_blueprint = make_google_blueprint(
     client_secret = 'uZ0J_cLBjEWnX8EXbzn7ZWv9',
     scope=[
         "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/plus.me",
+        "https://www.googleapis.com/auth/plus.me"
     ]
 )
 
@@ -53,14 +53,7 @@ def googleLogin():
     if account_info.ok:
         account_info_json = account_info.json()
 
-        '''login_session['email'] = account_info_json['email']
-        login_session['name'] = account_info_json['name']
-
-        user_id = getUserID(login_session['email'])
-        if not user_id:
-            user_id = createUser(login_session)
-        login_session['user_id'] = user_id'''
-        return "You are {} on Google".format(account_info_json['email'])
+        return "You are {} on Google".format(account_info_json)
 
 #Log the user out
 @app.route("/logout")
@@ -73,6 +66,8 @@ def logout():
     )
     if google.authorized:
         if resp.ok:
+            del login_session['name']
+            del login_session['email']
             login_session.clear()
             return redirect(url_for('loggedOut'))
 
@@ -88,11 +83,6 @@ def createUser(login_session):
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
-def getUserInfo(user_id):
-    session = DBSession()
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
-
 def getUserID(email):
     session = DBSession()
     try:
@@ -103,8 +93,7 @@ def getUserID(email):
 
 
 
-#JSON ENDPOINTS Work in Progress ######
-
+#JSON ENDPOINTS
 @app.route('/catalog/JSON')
 def catalogJSON():
     session = DBSession()
@@ -130,16 +119,15 @@ def itemsJSON(category_id):
     items = session.query(Items).filter_by(category_id=category.id)
     return jsonify(tems=[r.serialize for r in items])
 
-######################
-
+#ROUTES
 @app.route('/')
 @app.route('/catalog/')
 def Catalog():
     session = DBSession()
     category = session.query(Category).all()
-    items = session.query(Items).filter_by(category_id=Items.category_id)
+    items = session.query(Items).filter_by(category_id=Items.category_id).order_by(desc(Items.date_created)).limit(10)
 
-    #USE THIS FOR EACH USER'S HOMEPAGE
+    #Check to see if a user is signed in
     if google.authorized:
         account_info = google.get("/oauth2/v2/userinfo")
 
@@ -155,9 +143,7 @@ def Catalog():
                 user_id = createUser(login_session)
             login_session['user_id'] = user_id
 
-        return render_template(
-            'loggedIn.html',
-            user_name=login_session['name'],
+        return render_template('loggedIn.html',
             email=login_session['email'],
             user_id=user_id,
             category=category, items=items)
@@ -172,8 +158,14 @@ def loggedOut():
 def catalogItems(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(Items).filter_by(category_id=category.id)
-    return render_template('items.html', category=category, items=items)
+    items = session.query(Items).filter_by(category_id=category.id).all()
+
+    if not google.authorized:
+        return redirect(url_for('Catalog'))
+
+    creator = session.query(User).filter_by(email=login_session['email']).one()
+
+    return render_template('items.html', category=category, items=items, creator=creator)
 
 #Create
 @app.route('/catalog/<int:category_id>/new/', methods=['GET', 'POST'])
@@ -181,13 +173,17 @@ def newItem(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
-    #user_id = session.query(Items).filter_by(user_id=Items.user_id)
+
+    if not google.authorized:
+        return redirect(url_for('Catalog'))
+    
+    creator = session.query(User).filter_by(email=login_session['email']).one()
 
     if request.method == 'POST':
         newItem = Items(
             item_name=request.form['name'],
             description=request.form['description'], 
-            category_id=category.id, user_id=1
+            category_id=category.id, user_id=creator.id
             )
         session.add(newItem)
         session.commit()
@@ -204,6 +200,9 @@ def editCatalogItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
     itemToEdit = session.query(Items).filter_by(id=item_id).one()
+
+    if not google.authorized:
+        return redirect(url_for('Catalog'))
 
     if request.method == 'POST':
         itemToEdit.item_name = request.form['name']
@@ -224,6 +223,9 @@ def deleteCatalogItem(category_id, item_id):
     items = session.query(Items).filter_by(category_id=category.id)
     itemToDelete = session.query(Items).filter_by(id=item_id).one()
 
+    if not google.authorized:
+        return redirect(url_for('Catalog'))
+
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -232,7 +234,6 @@ def deleteCatalogItem(category_id, item_id):
     else:
         return render_template('deleteItem.html', category=category, items=items, item=itemToDelete)
 
-#login_manager = LoginManager()
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'

@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=True)
     email = Column(String(100), nullable=False)
 
     @property
@@ -42,7 +42,7 @@ class Items(Base):
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
     description = Column(String(500), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
     @property
