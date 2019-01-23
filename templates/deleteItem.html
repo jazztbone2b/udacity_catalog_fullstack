@@ -9,15 +9,14 @@
     {% include "loggedInheader.html" %}
     <div id='container'>
         <div id='delete-container'>
-            <h1>Are you sure you want to delete {{ item.item_name }}?</h1>
+            <p>Are you sure you want to delete <strong>{{ item.item_name }}</strong>?</p>
 
             <form action='#' method='POST'>
-                <input type='submit' value='Delete Item'></input>
+                <input id='input-button' type='submit' value='Delete Item'></input>
             </form>
             
-            <a href="{{url_for('catalogItems', category_id = item.category_id)}}">
-                <button id='button'>Cancel</button>
-            </a>
+            
+            <button id='button'><a href="{{url_for('catalogItems', category_id = item.category_id)}}">Cancel</a></button>
         </div>
     </div>
 </body>

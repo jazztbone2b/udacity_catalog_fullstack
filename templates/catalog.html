@@ -8,6 +8,8 @@
 <body>
     {% include "header.html" %}
 
+    <p id='login-message'>Please login with your Google Plus Account to get started</p>
+    
     <div id='container'>
         <div id='box'>
             <h2>Categories:</h2>
@@ -15,7 +17,7 @@
             <p id='category-names'><a href="{{url_for('catalogItems', category_id = i.id)}}">{{ i.category_name }}</a></p>
             {% endfor %}
         </div>
-        
+
         <div id='box'>
             <h2>Latest Items:</h2>
             {% for i in items %}

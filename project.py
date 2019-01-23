@@ -31,13 +31,13 @@ CLIENT_ID = json.loads(
 CLIENT_SECRET = json.loads(
     open('client_secret.json', 'r').read())['web']['client_secret']
 
-#connect to database and create a session
+#connect to database
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 
-#Google Login using Flask Dance #####
+#Google Login using Flask Dance
 google_blueprint = make_google_blueprint(
     client_id = CLIENT_ID,
     client_secret = CLIENT_SECRET,
@@ -69,6 +69,8 @@ def logout():
     )
     if google.authorized:
         if resp.ok:
+            del login_session['name']
+            del login_session['email']
             login_session.clear()
             return redirect(url_for('loggedOut'))
     else:
@@ -93,7 +95,6 @@ def getUserID(email):
         return user.id
     except:
         return None
-
 
 
 #JSON ENDPOINTS
@@ -166,7 +167,7 @@ def Catalog():
 def loggedOut():
     return render_template('loggedOut.html')
 
-@app.route('/catalog/<category_id>')
+@app.route('/catalog/<int:category_id>')
 def catalogItems(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
