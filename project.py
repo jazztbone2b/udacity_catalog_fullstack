@@ -53,7 +53,7 @@ def googleLogin():
     if account_info.ok:
         account_info_json = account_info.json()
 
-        return "You are {} on Google".format(account_info_json)
+        return redirect(url_for('Catalog'))
 
 #Log the user out
 @app.route("/logout")
@@ -66,10 +66,10 @@ def logout():
     )
     if google.authorized:
         if resp.ok:
-            del login_session['name']
-            del login_session['email']
             login_session.clear()
             return redirect(url_for('loggedOut'))
+    else:
+        return redirect(url_for('Catalog'))
 
 #Save logged in user to the database
 def createUser(login_session):
@@ -134,6 +134,10 @@ def Catalog():
         if account_info.ok:
             account_info_json = account_info.json()
 
+            if not 'name' in account_info_json:
+                login_session.clear()
+                return render_template('needGooglePlus.html')
+
             login_session['name'] = account_info_json['name']
             login_session['email'] = account_info_json['email']
 
@@ -149,7 +153,7 @@ def Catalog():
                 category_id=Category.id).order_by(desc(Items.date_created)).limit(10)
 
         return render_template('loggedIn.html',
-            email=login_session['email'],
+            name=login_session['name'],
             user_id=user_id,
             category=category, items=user_items)
     else:
@@ -187,6 +191,10 @@ def newItem(category_id):
     creator = session.query(User).filter_by(email=login_session['email']).one()
 
     if request.method == 'POST':
+        if request.form['name'] == '' or request.form['description'] == '':
+            flash('Item was not saved. Be sure all fields are filled in and try again.')
+            return redirect(url_for('catalogItems', category_id=category_id))
+
         newItem = Items(
             item_name=request.form['name'],
             description=request.form['description'], 
