@@ -26,6 +26,11 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
 
+CLIENT_ID = json.loads(
+    open('client_secret.json', 'r').read())['web']['client_id']
+CLIENT_SECRET = json.loads(
+    open('client_secret.json', 'r').read())['web']['client_secret']
+
 #connect to database and create a session
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
@@ -34,8 +39,8 @@ DBSession = sessionmaker(bind=engine)
 
 #Google Login using Flask Dance #####
 google_blueprint = make_google_blueprint(
-    client_id = '1059882579334-9pou6o75d96ls5agole7l6apm6vp6p8k.apps.googleusercontent.com',
-    client_secret = 'uZ0J_cLBjEWnX8EXbzn7ZWv9',
+    client_id = CLIENT_ID,
+    client_secret = CLIENT_SECRET,
     scope=[
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/plus.me"
@@ -51,8 +56,6 @@ def googleLogin():
     account_info = google.get("/oauth2/v2/userinfo")
 
     if account_info.ok:
-        account_info_json = account_info.json()
-
         return redirect(url_for('Catalog'))
 
 #Log the user out
