@@ -10,22 +10,22 @@
 
     <div id='container'>
         <div id='box'>
-            <h1>Categories:</h1>
+            <h2>Categories:</h2>
             {% for i in category %}
-            <h2><a href="{{url_for('catalogItems', category_id = i.id)}}">{{ i.category_name }}</a></h2>
+            <p id='category-names'><a href="{{url_for('catalogItems', category_id = i.id)}}">{{ i.category_name }}</a></p>
             {% endfor %}
         </div>
         
         <div id='box'>
-            <h1>Latest Items:</h1>
+            <h2>Latest Items:</h2>
             {% for i in items %}
-            <h2>{{ i.item_name }} 
+            <p>{{ i.item_name }} 
                 {% for j in category %}
                     {% if i.category_id == j.id %}
                         ({{ j.category_name }})
                     {% endif %}
                 {% endfor %}
-            </h2>
+            </p>
             {% endfor %}
         </div>
     </div>

@@ -8,7 +8,7 @@
 <body>
     {% include "loggedInheader.html" %}
     <div id='message-container'>
-        <h1>{{ category.category_name }} Items</h1>
+        <h2>{{ category.category_name }} Items</h2>
 
         <p id='create'><a href="{{url_for('newItem', category_id = category.id)}}">Create New Item</a></p>
 
@@ -25,17 +25,15 @@
 
     <div id='item-container'>
         {% for i in items %}
-            {% if i.user_id == creator.id %}
-                <div id='item-box'>
-                    <h2>{{ i.item_name }}</h2>
-                    <p>{{ i.description }}</p>
-                    <div>
-                        <a href="{{url_for('editCatalogItem', category_id = category.id, item_id = i.id)}}" id='edit'> Edit Item</a>
-                        <a>|</a>
-                        <a href="{{url_for('deleteCatalogItem', category_id = category.id, item_id = i.id)}}" id='delete'>Delete Item</a>
-                    </div>
+            <div id='item-box'>
+                <h3>{{ i.item_name }}</h3>
+                <p>{{ i.description }}</p>
+                <div>
+                    <a href="{{url_for('editCatalogItem', category_id = category.id, item_id = i.id)}}" id='edit'> Edit Item</a>
+                    <a>|</a>
+                    <a href="{{url_for('deleteCatalogItem', category_id = category.id, item_id = i.id)}}" id='delete'>Delete Item</a>
                 </div>
-            {% endif %}  
+            </div> 
         {% endfor %}
     </div>
 

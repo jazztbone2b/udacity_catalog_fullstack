@@ -125,7 +125,7 @@ def itemsJSON(category_id):
 def Catalog():
     session = DBSession()
     category = session.query(Category).all()
-    items = session.query(Items).filter_by(category_id=Items.category_id).order_by(desc(Items.date_created)).limit(10)
+    items = session.query(Items).filter_by(category_id=Items.category_id, user_id=1).order_by(desc(Items.date_created)).limit(10)
 
     #Check to see if a user is signed in
     if google.authorized:
@@ -143,10 +143,15 @@ def Catalog():
                 user_id = createUser(login_session)
             login_session['user_id'] = user_id
 
+            creator = session.query(User).filter_by(email=login_session['email']).one()
+            user_items = session.query(Items).filter_by(
+                user_id=creator.id, 
+                category_id=Category.id).order_by(desc(Items.date_created)).limit(10)
+
         return render_template('loggedIn.html',
             email=login_session['email'],
             user_id=user_id,
-            category=category, items=items)
+            category=category, items=user_items)
     else:
         return render_template('catalog.html', category=category, items=items)
 
@@ -158,14 +163,15 @@ def loggedOut():
 def catalogItems(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(Items).filter_by(category_id=category.id).all()
 
+    #Redirect if the user is not signed in
     if not google.authorized:
         return redirect(url_for('Catalog'))
 
     creator = session.query(User).filter_by(email=login_session['email']).one()
+    user_items = session.query(Items).filter_by(user_id=creator.id, category_id=category.id).all()
 
-    return render_template('items.html', category=category, items=items, creator=creator)
+    return render_template('items.html', category=category, items=user_items, creator=creator)
 
 #Create
 @app.route('/catalog/<int:category_id>/new/', methods=['GET', 'POST'])
@@ -174,6 +180,7 @@ def newItem(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
 
+    #Redirect if the user is not signed in
     if not google.authorized:
         return redirect(url_for('Catalog'))
     
@@ -201,6 +208,7 @@ def editCatalogItem(category_id, item_id):
     items = session.query(Items).filter_by(category_id=category.id)
     itemToEdit = session.query(Items).filter_by(id=item_id).one()
 
+    #Redirect if the user is not signed in
     if not google.authorized:
         return redirect(url_for('Catalog'))
 
@@ -223,6 +231,7 @@ def deleteCatalogItem(category_id, item_id):
     items = session.query(Items).filter_by(category_id=category.id)
     itemToDelete = session.query(Items).filter_by(id=item_id).one()
 
+    #Redirect if the user is not signed in
     if not google.authorized:
         return redirect(url_for('Catalog'))
 
