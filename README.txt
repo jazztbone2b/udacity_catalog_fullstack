@@ -1,1 +1,4 @@
-Place your catalog project in this directory.
+Catalog Application for Udacity's Full Stack Nanodegree
+Collin Banks
+
+#
