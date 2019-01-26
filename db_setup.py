@@ -1,9 +1,11 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, create_engine
+from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy import String, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import datetime
 
 Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -20,6 +22,7 @@ class User(Base):
             'id': self.id,
         }
 
+
 class Category(Base):
     __tablename__ = 'category'
 
@@ -32,6 +35,7 @@ class Category(Base):
             'category_name': self.category_name,
             'id': self.id,
         }
+
 
 class Items(Base):
     __tablename__ = 'items'
@@ -54,7 +58,10 @@ class Items(Base):
             'id': self.id,
         }
 
-engine = create_engine('sqlite:///catalog.db', connect_args={'check_same_thread': False})
+
+engine = create_engine(
+    'sqlite:///catalog.db',
+    connect_args={'check_same_thread': False})
 
 Base.metadata.create_all(engine)
 
