@@ -43,4 +43,3 @@ A basic fullstack application that demonstrates CRUD functionality and OAUTH sup
 * Only Google Plus logins are currently supported. You must have a Google Plus account in order to sign in and use this application
 
 * You may need to run `sudo pip install` ... in order to install the dependencies
-
