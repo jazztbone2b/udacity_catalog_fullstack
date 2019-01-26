@@ -10,9 +10,6 @@ from sqlalchemy.orm import sessionmaker
 
 from db_setup import Base, User, Category, Items
 
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
-
 import httplib2
 import json
 import random
