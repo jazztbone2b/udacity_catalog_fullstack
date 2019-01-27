@@ -9,12 +9,12 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-#Test User
+# Test User
 test_user = User(name='Test User', email='tes@email.com')
 session.add(test_user)
 session.commit()
 
-#categories to add to the database
+# ategories to add to the database
 category1 = Category(category_name='Soccer')
 session.add(category1)
 session.commit()
@@ -47,55 +47,54 @@ category8 = Category(category_name='Rock Climbing')
 session.add(category8)
 session.commit()
 
-#items to add to the database
-item1 = Items(item_name='Soccer Ball', category=category1, 
-    description='A black and white ball to play soccer.', 
-    user_id=1)
+# items to add to the database
+item1 = Items(item_name='Soccer Ball', category=category1,
+              description='A black and white ball to play soccer.',
+              user_id=1)
 session.add(item1)
 session.commit()
 
-item2 = Items(item_name='Baseball', category=category2, 
-    description='A white ball with red thread.', 
-    user_id=1)
+item2 = Items(item_name='Baseball', category=category2,
+              description='A white ball with red thread.',
+              user_id=1)
 session.add(item2)
 session.commit()
 
-item3 = Items(item_name='Football', category=category3, 
-    description='A brown, leather ball used for Football.', 
-    user_id=1)
+item3 = Items(item_name='Football', category=category3,
+              description='A brown, leather ball used for Football.',
+              user_id=1)
 session.add(item3)
 session.commit()
 
-item4 = Items(item_name='Hockey Stick', category=category4, 
-    description='A long wooden stick used for hitting a hockey puck.', 
-    user_id=1)
+item4 = Items(item_name='Hockey Stick', category=category4,
+              description='A wooden stick used for hitting a hockey puck.',
+              user_id=1)
 session.add(item4)
 session.commit()
 
-item5 = Items(item_name='Frisbee', category=category5, 
-    description='A round plastic saucer.', 
-    user_id=1)
+item5 = Items(item_name='Frisbee', category=category5,
+              description='A round plastic saucer.',
+              user_id=1)
 session.add(item5)
 session.commit()
 
-item6 = Items(item_name='Snowboard', category=category6, 
-    description='A long, flat board used to ride on top of the snow.', 
-    user_id=1)
+item6 = Items(item_name='Snowboard', category=category6,
+              description='A long flat board used to ride on top of the snow.',
+              user_id=1)
 session.add(item6)
 session.commit()
 
-item7 = Items(item_name='Foosball ball', category=category7, 
-    description='A small, plastic white and black ball used to play Foosball.', 
-    user_id=1)
+item7 = Items(item_name='Foosball ball', category=category7,
+              description='A white and black ball used to play Foosball.',
+              user_id=1)
 session.add(item7)
 session.commit()
 
-item8 = Items(item_name='Climbing Shoes', category=category8, 
-    description='Shoes with extra grip used to climb up rock walls.', 
-    user_id=1)
+item8 = Items(item_name='Climbing Shoes', category=category8,
+              description='Shoes with extra grip used to climb up rock walls.',
+              user_id=1)
 session.add(item8)
 session.commit()
 
 
 print("Added items to the database!")
-
