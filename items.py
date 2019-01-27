@@ -14,7 +14,7 @@ test_user = User(name='Test User', email='tes@email.com')
 session.add(test_user)
 session.commit()
 
-# ategories to add to the database
+# categories to add to the database
 category1 = Category(category_name='Soccer')
 session.add(category1)
 session.commit()
