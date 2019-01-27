@@ -1,0 +1,3 @@
+Flask==1.0.0
+Flask-Dance==1.3.0
+SQLAlchemy==1.2.17
