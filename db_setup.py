@@ -7,6 +7,7 @@ import datetime
 Base = declarative_base()
 
 
+# User table
 class User(Base):
     __tablename__ = 'user'
 
@@ -23,6 +24,7 @@ class User(Base):
         }
 
 
+# Category table
 class Category(Base):
     __tablename__ = 'category'
 
@@ -37,6 +39,7 @@ class Category(Base):
         }
 
 
+# Items table
 class Items(Base):
     __tablename__ = 'items'
 
