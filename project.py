@@ -1,5 +1,10 @@
-from flask import Flask, render_template, request
-from flask import redirect, jsonify, url_for, flash
+from flask import (Flask,
+                   render_template,
+                   request,
+                   redirect,
+                   jsonify,
+                   url_for,
+                   flash)
 from flask import session as login_session
 from flask import make_response
 
@@ -47,6 +52,7 @@ google_blueprint = make_google_blueprint(
 app.register_blueprint(google_blueprint, url_prefix='/google_login')
 
 
+# Log the user in via Google
 @app.route('/google')
 def googleLogin():
     if not google.authorized:
@@ -74,28 +80,6 @@ def logout():
             return redirect(url_for('loggedOut'))
     else:
         return redirect(url_for('Catalog'))
-
-
-# Save logged in user to the database
-def createUser(login_session):
-    session = DBSession()
-    newUser = User(
-        name=login_session['name'],
-        email=login_session['email']
-        )
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
-
-
-def getUserID(email):
-    session = DBSession()
-    try:
-        user = session.query(User).filter_by(email=email).one()
-        return user.id
-    except:
-        return None
 
 
 # JSON ENDPOINTS
@@ -126,6 +110,28 @@ def itemsJSON(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
     return jsonify(tems=[r.serialize for r in items])
+
+
+#  Save logged in user to the database
+def createUser(login_session):
+    session = DBSession()
+    newUser = User(
+        name=login_session['name'],
+        email=login_session['email']
+        )
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserID(email):
+    session = DBSession()
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except Exception:
+        return None
 
 
 # ROUTES
@@ -252,24 +258,29 @@ def editCatalogItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
     itemToEdit = session.query(Items).filter_by(id=item_id).one()
+    creator = session.query(User).filter_by(
+        email=login_session['email']).one()
 
     # Redirect if the user is not signed in
     if not google.authorized:
         return redirect(url_for('Catalog'))
 
-    if request.method == 'POST':
-        itemToEdit.item_name = request.form['name']
-        itemToEdit.description = request.form['description']
-        session.add(itemToEdit)
-        session.commit()
-        flash('Item edited successfully!')
-        return redirect(url_for('catalogItems', category_id=category_id))
+    if creator.id == itemToEdit.user_id:
+        if request.method == 'POST':
+            itemToEdit.item_name = request.form['name']
+            itemToEdit.description = request.form['description']
+            session.add(itemToEdit)
+            session.commit()
+            flash('Item edited successfully!')
+            return redirect(url_for('catalogItems', category_id=category_id))
+        else:
+            return render_template(
+                'editItem.html',
+                category=category,
+                items=items,
+                item=itemToEdit)
     else:
-        return render_template(
-            'editItem.html',
-            category=category,
-            items=items,
-            item=itemToEdit)
+        return 'You are not authorized to delete this item.'
 
 
 # Delete
@@ -281,22 +292,27 @@ def deleteCatalogItem(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Items).filter_by(category_id=category.id)
     itemToDelete = session.query(Items).filter_by(id=item_id).one()
+    creator = session.query(User).filter_by(
+        email=login_session['email']).one()
 
     # Redirect if the user is not signed in
     if not google.authorized:
         return redirect(url_for('Catalog'))
 
-    if request.method == 'POST':
-        session.delete(itemToDelete)
-        session.commit()
-        flash('Item Deleted Successfully')
-        return redirect(url_for('catalogItems', category_id=category_id))
+    if creator.id == itemToDelete.user_id:
+        if request.method == 'POST':
+            session.delete(itemToDelete)
+            session.commit()
+            flash('Item Deleted Successfully')
+            return redirect(url_for('catalogItems', category_id=category_id))
+        else:
+            return render_template(
+                'deleteItem.html',
+                category=category,
+                items=items,
+                item=itemToDelete)
     else:
-        return render_template(
-            'deleteItem.html',
-            category=category,
-            items=items,
-            item=itemToDelete)
+        return 'You are not authorized to delete this item.'
 
 
 if __name__ == '__main__':

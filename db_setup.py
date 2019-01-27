@@ -7,8 +7,10 @@ import datetime
 Base = declarative_base()
 
 
-# User table
 class User(Base):
+    '''
+    Register users to the database
+    '''
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
@@ -24,8 +26,10 @@ class User(Base):
         }
 
 
-# Category table
 class Category(Base):
+    '''
+    Categories in the database
+    '''
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True)
@@ -39,8 +43,10 @@ class Category(Base):
         }
 
 
-# Items table
 class Items(Base):
+    '''
+    All items in the database
+    '''
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True)
